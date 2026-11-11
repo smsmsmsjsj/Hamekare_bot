@@ -672,7 +672,10 @@ async def st_text_count(update, context, text):
         f"کاراکتر: {len(text)}\n"
         f"بدون فاصله: {len(re.sub(r'\\s', '', text))}\n"
         f"کلمه: {len(text.split())}\n"
-        f"خط: {len(text.splitlines())}", parse_mode=HTML)
+        lines_count = len(text.splitlines())
+# و بعد در متن استفاده کنید:
+f"خط: {lines_count}"
+
 
 
 async def st_post_button(update, context, text):
