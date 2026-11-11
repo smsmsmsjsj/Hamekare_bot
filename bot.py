@@ -969,15 +969,23 @@ async def cmd_adminhelp(update, context):
 async def cmd_stats(update, context):
     def n(sql):
         return db(sql, (), "one")["c"]
+    sched_sql = "SELECT COUNT(*) c FROM posts WHERE status='scheduled'"
+    sched = n(sched_sql)
+    users = n("SELECT COUNT(*) c FROM users")
+    notes = n("SELECT COUNT(*) c FROM notes")
+    todos = n("SELECT COUNT(*) c FROM todos")
+    rems = n("SELECT COUNT(*) c FROM reminders WHERE sent=0")
+    exps = n("SELECT COUNT(*) c FROM expenses")
+    chans = n("SELECT COUNT(*) c FROM channels")
     await update.message.reply_text(
         "📊 <b>آمار ربات</b>\n\n"
-        f"👥 کاربران: {n('SELECT COUNT(*) c FROM users')}\n"
-        f"📝 یادداشت‌ها: {n('SELECT COUNT(*) c FROM notes')}\n"
-        f"✅ کارها: {n('SELECT COUNT(*) c FROM todos')}\n"
-        f"⏰ یادآورهای فعال: {n('SELECT COUNT(*) c FROM reminders WHERE sent=0')}\n"
-        f"💸 هزینه‌های ثبت‌شده: {n('SELECT COUNT(*) c FROM expenses')}\n"
-        f"📢 کانال‌ها: {n('SELECT COUNT(*) c FROM channels')}\n"
-        f"🗓 پست‌های زمان‌بندی‌شده: {n(\"SELECT COUNT(*) c FROM posts WHERE status='scheduled'\")}",
+        f"👥 کاربران: {users}\n"
+        f"📝 یادداشت‌ها: {notes}\n"
+        f"✅ کارها: {todos}\n"
+        f"⏰ یادآورهای فعال: {rems}\n"
+        f"💸 هزینه‌های ثبت‌شده: {exps}\n"
+        f"📢 کانال‌ها: {chans}\n"
+        f"🗓 پست‌های زمان‌بندی‌شده: {sched}",
         parse_mode=HTML)
 
 
