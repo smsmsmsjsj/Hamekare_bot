@@ -231,7 +231,6 @@ def day_start_ts():
 
 
 def parse_when(text):
-    """زمان را به epoch تبدیل می‌کند؛ نامعتبر = None"""
     t = normalize_digits(text).strip().lower()
     now = now_local()
     if t in ("الان", "now"):
@@ -667,15 +666,20 @@ async def st_date_conv(update, context, text):
 
 async def st_text_count(update, context, text):
     context.user_data.pop("state", None)
-    await update.message.reply_text(
-        "🔢 <b>نتیجه شمارش</b>\n\n"
-        f"کاراکتر: {len(text)}\n"
-        f"بدون فاصله: {len(re.sub(r'\\s', '', text))}\n"
-        f"کلمه: {len(text.split())}\n"
-        lines_count = len(text.splitlines())
-# و بعد در متن استفاده کنید:
-f"خط: {lines_count}"
+    
+    # متغیرهای کمکی برای جلوگیری از خطای بک‌اسلش داخل f-string
+    chars_len = len(text)
+    no_space_len = len(re.sub(r'\s', '', text))
+    words_len = len(text.split())
+    lines_count = len(text.splitlines())
 
+    await update.message.reply_text(
+        f"🔢 <b>نتیجه شمارش</b>\n\n"
+        f"کاراکتر: {chars_len}\n"
+        f"بدون فاصله: {no_space_len}\n"
+        f"کلمه: {words_len}\n"
+        f"خط: {lines_count}", parse_mode=HTML
+    )
 
 
 async def st_post_button(update, context, text):
